@@ -51,14 +51,12 @@ type ComponentArrayPropDetectName = {
   type: 'array'
   key: Literal | TemplateLiteral
   propName: string
-  value: null
   node: Expression | SpreadElement
 }
 type ComponentArrayPropUnknownName = {
   type: 'array'
   key: null
   propName: null
-  value: null
   node: Expression | SpreadElement
 }
 export type ComponentArrayProp =
@@ -85,18 +83,24 @@ export type ComponentObjectProp =
 
 export type ComponentUnknownProp = {
   type: 'unknown'
-  key: null
   propName: null
-  value: null
-  node: Expression | SpreadElement | null
+  node: Expression | SpreadElement | TypeNode | null
 }
 
 export type ComponentTypeProp = {
   type: 'type'
   key: Identifier | Literal
   propName: string
-  value: null
   node: TSPropertySignature | TSMethodSignature
+
+  required: boolean
+  types: string[]
+}
+
+export type ComponentInferTypeProp = {
+  type: 'infer-type'
+  propName: string
+  node: TypeNode
 
   required: boolean
   types: string[]
@@ -106,20 +110,19 @@ export type ComponentProp =
   | ComponentArrayProp
   | ComponentObjectProp
   | ComponentTypeProp
+  | ComponentInferTypeProp
   | ComponentUnknownProp
 
 type ComponentArrayEmitDetectName = {
   type: 'array'
   key: Literal | TemplateLiteral
   emitName: string
-  value: null
   node: Expression | SpreadElement
 }
 type ComponentArrayEmitUnknownName = {
   type: 'array'
   key: null
   emitName: null
-  value: null
   node: Expression | SpreadElement
 }
 export type ComponentArrayEmit =
@@ -146,22 +149,26 @@ export type ComponentObjectEmit =
 
 export type ComponentUnknownEmit = {
   type: 'unknown'
-  key: null
   emitName: null
-  value: null
-  node: Expression | SpreadElement | null
+  node: Expression | SpreadElement | TypeNode | null
 }
 
 export type ComponentTypeEmit = {
   type: 'type'
   key: TSLiteralType
   emitName: string
-  value: null
   node: TSCallSignatureDeclaration | TSFunctionType
+}
+
+export type ComponentInferTypeEmit = {
+  type: 'infer-type'
+  emitName: string
+  node: TypeNode
 }
 
 export type ComponentEmit =
   | ComponentArrayEmit
   | ComponentObjectEmit
   | ComponentTypeEmit
+  | ComponentInferTypeEmit
   | ComponentUnknownEmit

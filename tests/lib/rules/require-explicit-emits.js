@@ -6,6 +6,9 @@
 
 const RuleTester = require('eslint').RuleTester
 const rule = require('../../../lib/rules/require-explicit-emits')
+const {
+  getTypeScriptFixtureTestOptions
+} = require('../../test-utils/typescript')
 
 const tester = new RuleTester({
   parser: require.resolve('vue-eslint-parser'),
@@ -593,6 +596,17 @@ tester.run('require-explicit-emits', rule, {
       </script>
       `,
       options: [{ allowProps: true }]
+    },
+    {
+      code: `
+      <script setup lang="ts">
+      import {Emits1 as Emits} from './test01'
+      const emit = defineEmits<Emits>()
+      emit('foo')
+      emit('bar')
+      emit('baz')
+      </script>`,
+      ...getTypeScriptFixtureTestOptions()
     }
   ],
   invalid: [
@@ -1884,6 +1898,25 @@ emits: {'foo': null}
       `
             }
           ]
+        }
+      ]
+    },
+    {
+      code: `
+      <script setup lang="ts">
+      import {Emits1 as Emits} from './test01'
+      const emit = defineEmits<Emits>()
+      emit('foo')
+      emit('bar')
+      emit('baz')
+      emit('qux')
+      </script>`,
+      ...getTypeScriptFixtureTestOptions(),
+      errors: [
+        {
+          message:
+            'The "qux" event has been triggered but not declared on `defineEmits`.',
+          line: 8
         }
       ]
     }
